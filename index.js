@@ -48,15 +48,23 @@ app.get(`${API_PREFIX}/configuration`, (req, res) => {
         res.sendFile(`${__dirname}/${path.join(CONFIGURATION_FILE_NAME)}`);
     }
     catch(error) {
-        res.send(400);
+        res.status(400);
+        res.json({error: "File not found"});
     }
 });
 
 app.post(`${API_PREFIX}/configuration`, (req, res) => {
     let fileContent = req.rawBody;
+
+    if(!fileContent) {
+        res.status(400);
+        res.json({error: "Empty body, try to send plan text or binary data"});
+        return
+    }
+
     fs.writeFile(CONFIGURATION_FILE_NAME, fileContent, (err) => {
         if(err) throw err;
-        res.send(200);
+        res.json({message: "Configuration file is updated ..."});
     });
 });
 
