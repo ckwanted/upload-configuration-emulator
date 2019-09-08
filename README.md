@@ -16,3 +16,11 @@ npm run dev
 or
 npm start
 ```
+
+## End-Points
+
+GET http://localhost:3000/api/version
+
+GET http://localhost:3000/api/configuration
+
+POST http://localhost:3000/api/configuration

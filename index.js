@@ -39,6 +39,10 @@ app.get('/', (req, res) => {
     res.send("Alto Avion API");
 });
 
+app.get(`${API_PREFIX}/version`, (req, res) => {
+    res.send("configuration version 1.0");
+});
+
 app.get(`${API_PREFIX}/configuration`, (req, res) => {
     try {
         res.sendFile(`${__dirname}/${path.join(CONFIGURATION_FILE_NAME)}`);
