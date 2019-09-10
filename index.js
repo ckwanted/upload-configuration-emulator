@@ -7,17 +7,19 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const fs = require('fs');
 const cors = require('cors');
+const compression = require('compression');
 const log = require('./utils/logger');
 
 // MARK: - Server Config
 const app = express();
 
 app.use(cors());
+app.use(compression());
 app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.raw({ type: 'image/*', limit: '8mb' }));
 app.use(bodyParser.text({
+    limit: '500mb',
     verify: function (req, res, buf, encoding) {
         req.rawBody = buf;
     }
@@ -48,8 +50,7 @@ app.get(`${API_PREFIX}/configuration`, (req, res) => {
         res.sendFile(`${__dirname}/${path.join(CONFIGURATION_FILE_NAME)}`);
     }
     catch(error) {
-        res.status(400);
-        res.json({error: "File not found"});
+        res.status(400).json({error: "File not found"});
     }
 });
 
@@ -57,8 +58,7 @@ app.post(`${API_PREFIX}/configuration`, (req, res) => {
     let fileContent = req.rawBody;
 
     if(!fileContent) {
-        res.status(400);
-        res.json({error: "Empty body, try to send plan text or binary data"});
+        res.status(400).json({error: "Empty body, try to send plan text or binary data"});
         return
     }
 
